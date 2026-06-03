@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ORBIT - a 3D scrollytelling starter</title>
+  <meta name="description" content="ORBIT is a free, open-source 3D scroll-driven website template. Fork it, edit one config file, and deploy your own cinematic portfolio or product landing." />
+  <meta name="color-scheme" content="dark" />
+  <meta property="og:title" content="ORBIT - a 3D scrollytelling starter" />
+  <meta property="og:description" content="Fork it, edit the content, deploy your own cinematic 3D site. Open source, zero build, fast." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="./assets/og.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles/main.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Fixed 3D backdrop (decorative; hidden from AT) -->
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Scroll progress indicator -->
+  <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+
+  <header class="nav" id="nav">
+    <a class="nav__brand" href="#top" aria-label="ORBIT home">
+      <span class="nav__dot" aria-hidden="true"></span> ORBIT
+    </a>
+    <nav class="nav__links" aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="nav__cta" href="https://github.com/Dilip-kumar-22/orbit" target="_blank" rel="noopener">Get the code</a>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" id="top" data-scene="hero">
+      <div class="hero__inner">
+        <p class="eyebrow reveal">Open-source - 3D - zero build</p>
+        <h1 class="hero__title">
+          <span class="reveal" style="--i:0">Scroll through</span>
+          <span class="reveal accent" style="--i:1">a quiet galaxy</span>
+          <span class="reveal" style="--i:2">of your work.</span>
+        </h1>
+        <p class="hero__sub reveal" style="--i:3">
+          ORBIT is a cinematic, scroll-driven website starter. Fork it, edit one file,
+          and ship a 3D portfolio or product landing that actually feels alive - and stays fast.
+        </p>
+        <div class="hero__actions reveal" style="--i:4">
+          <a class="btn btn--primary" href="#work">See it move</a>
+          <a class="btn btn--ghost" href="https://github.com/Dilip-kumar-22/orbit" target="_blank" rel="noopener">Fork on GitHub</a>
+        </div>
+      </div>
+      <div class="scroll-cue reveal" style="--i:5" aria-hidden="true">
+        <span>Scroll</span>
+        <span class="scroll-cue__line"></span>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section" id="about" data-scene="about">
+      <div class="panel">
+        <p class="section__index" aria-hidden="true">01 / About</p>
+        <h2 class="section__title">A template that reads like a story, not a slideshow.</h2>
+        <div class="prose">
+          <p>
+            Most "3D websites" are a single hero animation bolted onto a flat page. ORBIT treats the
+            whole scroll as one directed sequence: the camera drifts forward, the central form breathes
+            and morphs, and the particle field parallaxes as your text panels arrive in rhythm.
+          </p>
+          <p>
+            Everything you are reading is real, selectable, scrollable text - not baked into a canvas.
+            The 3D lives behind the content, so the page stays accessible, crawlable, and readable on a
+            phone with a dead battery. Replace this copy with your own; the scene keeps its choreography.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section class="section" id="work" data-scene="work">
+      <div class="panel panel--wide">
+        <p class="section__index" aria-hidden="true">02 / Work</p>
+        <h2 class="section__title">Selected work slots, ready for yours.</h2>
+        <ul class="cards" role="list">
+          <li class="card reveal">
+            <span class="card__num">01</span>
+            <h3 class="card__title">Nebula Analytics</h3>
+            <p class="card__desc">A real-time dashboard with a WebGL data-galaxy. Replace with your flagship build.</p>
+            <span class="card__tag">WebGL - Product</span>
+          </li>
+          <li class="card reveal">
+            <span class="card__num">02</span>
+            <h3 class="card__title">Halcyon Brand Site</h3>
+            <p class="card__desc">A scroll-scrubbed launch film for a hardware brand. Swap in your case study.</p>
+            <span class="card__tag">Art direction - Motion</span>
+          </li>
+          <li class="card reveal">
+            <span class="card__num">03</span>
+            <h3 class="card__title">Field Notes</h3>
+            <p class="card__desc">An editorial reading experience with kinetic type. Make it your writing.</p>
+            <span class="card__tag">Editorial - Type</span>
+          </li>
+          <li class="card reveal">
+            <span class="card__num">04</span>
+            <h3 class="card__title">Your next project</h3>
+            <p class="card__desc">Add a card in index.html - the grid and reveal animation handle the rest.</p>
+            <span class="card__tag">Open slot</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CAPABILITIES -->
+    <section class="section" id="capabilities" data-scene="capabilities">
+      <div class="panel">
+        <p class="section__index" aria-hidden="true">03 / Capabilities</p>
+        <h2 class="section__title">Built for craft and speed.</h2>
+        <ul class="caps" role="list">
+          <li class="reveal"><strong>Real 3D, behind real text.</strong> A custom curl-noise core, a particle galaxy, bloom and a film grade - layered under selectable HTML.</li>
+          <li class="reveal"><strong>Smooth without hijacking.</strong> Native scroll drives an eased camera, so it feels buttery and stays fully accessible.</li>
+          <li class="reveal"><strong>Accessible by default.</strong> Semantic landmarks, keyboard focus, AA contrast, and a complete prefers-reduced-motion path.</li>
+          <li class="reveal"><strong>Fast.</strong> One dependency (three.js), capped DPR, and the render loop pauses when the tab or canvas is hidden.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section section--contact" id="contact" data-scene="contact">
+      <div class="panel panel--center">
+        <p class="section__index" aria-hidden="true">04 / Contact</p>
+        <h2 class="section__title">Make it yours.</h2>
+        <p class="prose prose--center">Clone the repo, edit the content in <code>index.html</code> and the scene in <code>src/config.js</code>, then deploy to GitHub Pages or Vercel in one click.</p>
+        <div class="hero__actions hero__actions--center">
+          <a class="btn btn--primary" href="https://github.com/Dilip-kumar-22/orbit" target="_blank" rel="noopener">Fork on GitHub</a>
+          <a class="btn btn--ghost" href="mailto:hello@example.com">Say hello</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>ORBIT - MIT licensed.</span>
+    <span>Built with three.js. No tracking, no cookies.</span>
+  </footer>
+
+  <noscript>
+    <style>#scene,.grain,.progress{display:none}.reveal{opacity:1!important;transform:none!important}</style>
+  </noscript>
+
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
