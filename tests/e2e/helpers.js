@@ -50,6 +50,20 @@ export async function openStatic(page, query = 'quality=low') {
   );
 }
 
+/**
+ * Lets the page run `frames` display frames. For "nothing changed" assertions this is a window measured in
+ * the browser's own frames instead of wall-clock time, so it means the same on a slow CI runner.
+ */
+export const settle = (page, frames = 30) =>
+  page.evaluate(
+    (n) =>
+      new Promise((resolve) => {
+        const tick = () => (--n > 0 ? requestAnimationFrame(tick) : resolve());
+        requestAnimationFrame(tick);
+      }),
+    frames,
+  );
+
 export const stats = (page) => page.evaluate(() => window.orbit.stats());
 export const orbitState = (page) => page.evaluate(() => document.documentElement.dataset.orbit);
 

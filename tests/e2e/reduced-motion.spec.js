@@ -5,6 +5,7 @@ import {
   openScene,
   openStatic,
   orbitState,
+  settle,
   stats,
   watch,
 } from './helpers.js';
@@ -23,13 +24,13 @@ test.describe('prefers-reduced-motion', () => {
 
     const first = await stats(page);
     expect(first.reducedMotion).toBe(true);
-    await page.waitForTimeout(800);
+    await settle(page, 45);
     expect((await stats(page)).frames).toBe(first.frames); // nothing animates
 
     // scroll and pointer input do not move a reduced-motion scene either
     await page.mouse.move(200, 200);
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
-    await page.waitForTimeout(400);
+    await settle(page, 30);
     expect((await stats(page)).frames).toBe(first.frames);
 
     // ...but a resize / orientation change re-renders the still frame at the new size
@@ -56,7 +57,7 @@ test.describe('prefers-reduced-motion', () => {
     await expectContentVisible(page);
     const still = await stats(page);
     expect(still.reducedMotion).toBe(true);
-    await page.waitForTimeout(600);
+    await settle(page, 40);
     expect((await stats(page)).frames).toBe(still.frames);
 
     await page.emulateMedia({ reducedMotion: 'no-preference' });

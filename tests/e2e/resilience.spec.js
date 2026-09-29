@@ -5,6 +5,7 @@ import {
   isSceneRequest,
   openScene,
   orbitState,
+  settle,
   stats,
   watch,
 } from './helpers.js';
@@ -67,6 +68,23 @@ test.describe('content survives every failure', () => {
     await expect(page.locator('#scene')).toBeHidden();
   });
 
+  test('WebGL probing throws: the page leaves the loading state and keeps its content', async ({ page }) => {
+    await page.addInitScript(() => {
+      const original = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function (type, ...rest) {
+        if (/webgl/i.test(type)) throw new Error('getContext is blocked by policy');
+        return original.call(this, type, ...rest);
+      };
+    });
+    const errors = [];
+    page.on('pageerror', (err) => errors.push(err.message));
+    await page.goto('/');
+    await expect.poll(() => orbitState(page)).toBe('unavailable');
+    await expectContentVisible(page);
+    await expect(page.locator('#scene')).toBeHidden();
+    expect(errors).toEqual([]); // handled, not an unhandled rejection
+  });
+
   test('WebGL context creation throws inside three.js', async ({ page }) => {
     await page.addInitScript(() => {
       const original = HTMLCanvasElement.prototype.getContext;
@@ -96,14 +114,17 @@ test.describe('WebGL context loss', () => {
       window.__lose.loseContext();
     });
     await expect.poll(() => orbitState(page)).toBe('lost');
-    await expectContentVisible(page);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible(); // the page carries on
     const frozen = (await stats(page)).frames;
-    await page.waitForTimeout(500);
+    await settle(page, 12);
     expect((await stats(page)).frames).toBe(frozen); // the loop really stopped
 
+    // The scene gives a lost context 5 s to come back and then tears itself down, so restore it while it
+    // still can and leave the slow checks (scrolling through every reveal) for afterwards.
     await page.evaluate(() => window.__lose.restoreContext());
     await expect.poll(() => orbitState(page)).toBe('running');
     await expect.poll(async () => (await stats(page)).frames).toBeGreaterThan(frozen + 2);
+    await expectContentVisible(page);
     expect(seen.problems).toEqual([]);
   });
 

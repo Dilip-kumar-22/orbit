@@ -44,12 +44,18 @@ test.describe('axe', () => {
 
 test('keyboard: every stop shows a visible focus indicator and nothing traps focus', async ({ page }) => {
   await page.goto('/?quality=low');
+  await page.evaluate(() => {
+    window.__tabbed = new Set();
+  });
   const stops = [];
   for (let i = 0; i < 40; i += 1) {
     await page.keyboard.press('Tab');
     const stop = await page.evaluate(() => {
       const el = document.activeElement;
-      if (!el || el === document.body) return null;
+      // Chromium hands focus to the (absent) browser UI after the last stop; Firefox and WebKit wrap around
+      // to the first one. Either way the cycle is complete.
+      if (!el || el === document.body || window.__tabbed.has(el)) return null;
+      window.__tabbed.add(el);
       const s = getComputedStyle(el);
       return {
         name: (el.getAttribute('aria-label') || el.textContent || el.tagName)
@@ -60,7 +66,7 @@ test('keyboard: every stop shows a visible focus indicator and nothing traps foc
         visible: s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) >= 2,
       };
     });
-    if (!stop) break; // focus left the document: the cycle is complete
+    if (!stop) break; // focus left the document or came back around: the cycle is complete
     stops.push(stop);
   }
   expect(stops.length).toBeGreaterThan(8);
