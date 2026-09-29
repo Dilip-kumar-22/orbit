@@ -108,4 +108,10 @@ describe('markup hygiene', () => {
     expect(html).toMatch(/<a class="skip-link" href="#main">/);
     expect(html).toMatch(/<main id="main" tabindex="-1">/);
   });
+
+  it('keeps the promises it makes: no claim of AA conformance or a "complete" reduced-motion path', () => {
+    expect(html + read('README.md')).not.toMatch(
+      /AA[- ]contrast|WCAG (2\.\d )?AA (compliant|conformant)|complete prefers-reduced-motion/i,
+    );
+  });
 });
