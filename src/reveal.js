@@ -26,7 +26,9 @@ export function initReveal() {
           io.unobserve(e.target);
         }
       },
-      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+      // No negative rootMargin: an element inside the excluded band (the hero's scroll cue, or anything
+      // at the very end of the page) could otherwise never be revealed.
+      { threshold: 0.15 },
     );
     for (const el of els) if (!el.classList.contains('is-visible')) io.observe(el);
     root.classList.add('reveal-enabled');
