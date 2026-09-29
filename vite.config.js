@@ -16,7 +16,11 @@ function orbit() {
     transformIndexHtml: {
       order: 'pre',
       // The import map only serves the un-bundled source tree; a build resolves `three` from node_modules.
-      handler: (html) => html.replace(/[ \t]*<script type="importmap">[\s\S]*?<\/script>\n?/, ''),
+      handler: (html) =>
+        html.replace(
+          /[ \t]*<!-- Resolves `three`[^>]*-->\n[ \t]*<script type="importmap">[\s\S]*?<\/script>\n?/,
+          '',
+        ),
     },
     writeBundle(options) {
       for (const file of COPY_TO_DIST) {
@@ -45,7 +49,15 @@ export default defineConfig({
   base: './',
   publicDir: false,
   plugins: [orbit(), orbitDev()],
-  build: { target: 'es2022', outDir: 'dist', emptyOutDir: true },
+  // three.js is most of the lazy scene chunk (~560 kB, ~140 kB gzip after tree-shaking); it is not on the critical path.
+  // assetsInlineLimit 0: Vite inlines assets under 4 kB as data: URLs, which the CSP (img-src 'self') refuses.
+  build: {
+    target: 'es2022',
+    outDir: 'dist',
+    emptyOutDir: true,
+    assetsInlineLimit: 0,
+    chunkSizeWarningLimit: 650,
+  },
   preview: { headers: securityHeaders() },
   test: {
     include: ['tests/unit/**/*.test.js'],

@@ -7,6 +7,12 @@ const ENV_NOISE = [
   /\[GroupMarkerNotSet\]/i,
 ];
 
+// What "the 3D code" is on each target: vendor/three + src/scene.js in the source tree, one lazy chunk in dist.
+export const SCENE_ROUTE =
+  process.env.ORBIT_TARGET === 'dist' ? '**/assets/scene-*.js' : '**/vendor/three/**';
+export const isSceneRequest = (url) =>
+  /\/vendor\/three\/|\/src\/scene\.js|\/assets\/scene-[^/]+\.js/.test(url);
+
 /** Records everything that would show up as a problem in a visitor's console. */
 export function watch(page) {
   const problems = [];

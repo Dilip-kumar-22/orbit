@@ -1,5 +1,13 @@
 import { expect, test } from '@playwright/test';
-import { expectContentVisible, openScene, orbitState, stats, watch } from './helpers.js';
+import {
+  SCENE_ROUTE,
+  expectContentVisible,
+  isSceneRequest,
+  openScene,
+  orbitState,
+  stats,
+  watch,
+} from './helpers.js';
 
 // The product promise: semantic HTML first, WebGL second. Whatever fails, the content must not.
 
@@ -17,7 +25,7 @@ test.describe('content survives every failure', () => {
 
   test('three.js fails to load (CDN / import-map failure)', async ({ page }) => {
     const seen = watch(page);
-    await page.route('**/vendor/three/**', (route) => route.abort());
+    await page.route(SCENE_ROUTE, (route) => route.abort());
     await page.goto('/');
     await expect.poll(() => orbitState(page)).toBe('unavailable');
     await expectContentVisible(page);
@@ -31,6 +39,7 @@ test.describe('content survives every failure', () => {
   });
 
   test('the import map is broken', async ({ page }) => {
+    test.skip(process.env.ORBIT_TARGET === 'dist', 'the build has no import map: three.js is bundled');
     await page.route('**/*', async (route) => {
       if (route.request().resourceType() !== 'document') return route.continue();
       const response = await route.fetch();
@@ -53,9 +62,7 @@ test.describe('content survives every failure', () => {
     await page.goto('/');
     await expect.poll(() => orbitState(page)).toBe('unavailable');
     await expectContentVisible(page);
-    expect(
-      seen.requests.filter((url) => url.includes('/vendor/three/') || url.endsWith('/src/scene.js')),
-    ).toEqual([]);
+    expect(seen.requests.filter(isSceneRequest)).toEqual([]);
     expect(seen.problems).toEqual([]);
     await expect(page.locator('#scene')).toBeHidden();
   });

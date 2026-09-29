@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { expectContentVisible, openScene, orbitState, stats, watch } from './helpers.js';
+import { expectContentVisible, isSceneRequest, openScene, orbitState, stats, watch } from './helpers.js';
 
 const openStatic = async (page, query = 'quality=low') => {
   await page.goto(`/?debug&${query}`);
@@ -73,9 +73,7 @@ test.describe('prefers-reduced-motion', () => {
     await expect.poll(() => orbitState(page)).toBe('disabled');
     await expect(page.locator('#scene')).toBeHidden();
     await expectContentVisible(page);
-    expect(
-      seen.requests.filter((url) => url.includes('/vendor/three/') || url.endsWith('/src/scene.js')),
-    ).toEqual([]);
+    expect(seen.requests.filter(isSceneRequest)).toEqual([]);
 
     // the preference turns off: the backdrop comes back
     await page.emulateMedia({ reducedMotion: 'no-preference' });
