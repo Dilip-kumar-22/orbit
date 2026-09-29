@@ -4,6 +4,7 @@ import {
   SECTION_DEFAULTS,
   buildTimeline,
   measureAnchors,
+  pickActiveSection,
   sampleTimeline,
 } from '../../src/choreography.js';
 
@@ -127,5 +128,27 @@ describe('sampleTimeline', () => {
     const single = buildTimeline({ a: { cameraZ: 3 } }, [{ name: 'a', at: 0.7 }]);
     expect(sampleTimeline(single, 0.1).cameraZ).toBe(3);
     expect(sampleTimeline(single, 0.9).cameraZ).toBe(3);
+  });
+});
+
+describe('pickActiveSection', () => {
+  const tops = [0, 800, 1600, 2400];
+
+  it('picks the last section that starts at or above the reference line', () => {
+    expect(pickActiveSection(tops, -50)).toBe(0);
+    expect(pickActiveSection(tops, 0)).toBe(0);
+    expect(pickActiveSection(tops, 799)).toBe(0);
+    expect(pickActiveSection(tops, 800)).toBe(1);
+    expect(pickActiveSection(tops, 2399)).toBe(2);
+    expect(pickActiveSection(tops, 99999)).toBe(3);
+  });
+
+  it('is unambiguous for sections taller than the viewport (no threshold that can never be met)', () => {
+    const tall = [0, 500, 4000]; // the middle section is 3500 px tall
+    for (let y = 500; y < 4000; y += 100) expect(pickActiveSection(tall, y)).toBe(1);
+  });
+
+  it('copes with no sections', () => {
+    expect(pickActiveSection([], 100)).toBe(0);
   });
 });

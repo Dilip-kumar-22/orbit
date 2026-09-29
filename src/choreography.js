@@ -72,3 +72,13 @@ export function sampleTimeline({ keys }, p, out = {}) {
   const t = smooth(clamp01((u - HOLD) / (1 - 2 * HOLD)));
   return write(out, a, b, i, i + 1, t);
 }
+
+/**
+ * Index of the section the reference line `refY` (document coordinates) falls in: the last section
+ * that starts at or above it. `tops` are section tops in document order.
+ */
+export function pickActiveSection(tops, refY) {
+  let active = 0;
+  for (let i = 0; i < tops.length && tops[i] <= refY; i += 1) active = i;
+  return active;
+}

@@ -91,19 +91,23 @@ void main(){
 }`;
 
 export const particleVertex = /* glsl */ `
-uniform float uSize; uniform float uPixelRatio;
+uniform float uSize; uniform float uPixelRatio; uniform float uMaxSize;
 attribute float aRand;
-varying float vRand;
+varying float vRand; varying float vFade;
 void main(){
   vRand = aRand;
   vec4 mv = modelViewMatrix * vec4(position, 1.0);
-  gl_PointSize = uSize * uPixelRatio * (300.0 / -mv.z) * (0.55 + aRand * 0.9);
+  float depth = max(-mv.z, 0.001);
+  // Perspective size, capped: a point drifting right past the camera would otherwise balloon into a
+  // huge blob (and GPUs silently clip or drop point sizes above their limit).
+  gl_PointSize = min(uSize * uPixelRatio * (300.0 / depth) * (0.55 + aRand * 0.9), uMaxSize);
+  vFade = smoothstep(0.15, 1.2, depth); // fade points out as they reach the camera instead of popping
   gl_Position = projectionMatrix * mv;
 }`;
 
 export const particleFragment = /* glsl */ `
 uniform vec3 uColor; uniform float uTime;
-varying float vRand;
+varying float vRand; varying float vFade;
 void main(){
   vec2 uv = gl_PointCoord - 0.5;
   float d = length(uv);
@@ -111,7 +115,7 @@ void main(){
   // GLSL leaves smoothstep() undefined when edge0 >= edge1, so keep the edges ascending and invert.
   float a = 1.0 - smoothstep(0.0, 0.5, d);
   float tw = 0.55 + 0.45 * sin(uTime * 1.6 + vRand * 30.0);
-  gl_FragColor = vec4(uColor * (0.7 + vRand * 0.5), a * tw);
+  gl_FragColor = vec4(uColor * (0.7 + vRand * 0.5), a * tw * vFade);
 }`;
 
 // Final grade + vignette pass (runs AFTER OutputPass, in display space).

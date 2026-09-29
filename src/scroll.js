@@ -1,61 +1,107 @@
-import { CONFIG } from './config.js';
+import { measureAnchors, pickActiveSection } from './choreography.js';
 
-// Native scroll drives everything (accessible, no scrolljacking). The scene eases toward
-// the scroll-derived target each frame, which is where the "smooth" feel comes from.
-// The scene is optional and arrives late (it is loaded after the baseline UI): call
-// attachScene(scene) when it is ready; everything else works without it.
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+
+// Native scroll drives everything (accessible, no scrolljacking). The scene eases toward the
+// scroll-derived target each frame, which is where the "smooth" feel comes from.
+//
+// The scene is optional and arrives late (it is loaded after the baseline UI): call attachScene()
+// once it is ready; the progress bar, nav state and active section work without it.
 export function initScroll() {
+  const root = document.documentElement;
   const bar = document.getElementById('progress-bar');
   const nav = document.getElementById('nav');
-  const links = [...document.querySelectorAll('.nav__links a')];
-  const sections = [...document.querySelectorAll('[data-scene]')];
+  const links = [...document.querySelectorAll('.nav__links a[href^="#"]')];
+  const sectionEls = [...document.querySelectorAll('section[data-scene]')];
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const coarse = matchMedia('(pointer: coarse)');
+
   let scene = null;
-  let hue = null; // last active section hue, replayed to a scene that attaches late
+  let layout = { max: 0, tops: [], anchors: [] };
+  let active = -1;
+  let measureRaf = 0;
+
+  // Layout is measured only when it can have changed (load, resize, content size) - never per scroll
+  // event - so scrolling itself does no layout reads.
+  function measure() {
+    const y = window.scrollY;
+    const rects = sectionEls.map((el) => {
+      const r = el.getBoundingClientRect();
+      return { name: el.dataset.scene, top: r.top + y, height: r.height };
+    });
+    const height = root.scrollHeight;
+    layout = {
+      max: Math.max(0, height - window.innerHeight),
+      tops: rects.map((r) => r.top),
+      anchors: measureAnchors(rects, height, window.innerHeight),
+    };
+    scene?.setSections(layout.anchors);
+    onScroll();
+  }
+  function scheduleMeasure() {
+    if (measureRaf) return;
+    measureRaf = requestAnimationFrame(() => {
+      measureRaf = 0;
+      measure();
+    });
+  }
+
+  // The section under a reference line 40% down the viewport is the active one. It is deterministic
+  // (unlike intersection thresholds, which never fire for a section taller than the viewport allows).
+  function markActive(index) {
+    const section = sectionEls[index];
+    root.dataset.section = section?.dataset.scene ?? '';
+    for (const a of links) {
+      const current = section !== undefined && a.getAttribute('href') === `#${section.id}`;
+      a.classList.toggle('is-active', current);
+      if (current) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    }
+  }
 
   function onScroll() {
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const p = max > 0 ? window.scrollY / max : 0;
-    if (bar) bar.style.width = (p * 100).toFixed(2) + '%';
-    if (nav) nav.classList.toggle('is-scrolled', window.scrollY > 12);
-    if (scene) scene.setProgress(p);
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
-  onScroll();
-
-  // active section -> nav highlight + scene hue grade
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          const name = e.target.getAttribute('data-scene');
-          if (CONFIG.grade[name] != null) {
-            hue = CONFIG.grade[name];
-            if (scene) scene.setSectionHue(hue);
-          }
-          const id = e.target.id;
-          links.forEach((a) => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
-        }
-      },
-      { threshold: 0.5 },
-    );
-    sections.forEach((s) => io.observe(s));
+    const y = window.scrollY;
+    const p = layout.max > 0 ? clamp01(y / layout.max) : 0;
+    if (bar) bar.style.transform = `scaleX(${p.toFixed(4)})`;
+    nav?.classList.toggle('is-scrolled', y > 12);
+    scene?.setProgress(p);
+    const index = layout.tops.length ? pickActiveSection(layout.tops, y + window.innerHeight * 0.4) : -1;
+    if (index !== active) {
+      active = index;
+      markActive(index);
+    }
   }
 
-  // pointer parallax (skip on touch + reduced-motion)
+  // pointer parallax (not on touch, not under reduced motion)
   function onPointerMove(e) {
+    if (!scene || motion.matches || coarse.matches) return;
     scene.onPointer((e.clientX / window.innerWidth) * 2 - 1, -((e.clientY / window.innerHeight) * 2 - 1));
   }
+
+  const resizeObserver = 'ResizeObserver' in window ? new ResizeObserver(scheduleMeasure) : null;
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', scheduleMeasure, { passive: true });
+  resizeObserver?.observe(document.body); // content growing or shrinking (fonts, images, wrapping)
+  document.fonts?.ready.then(scheduleMeasure);
+  measure();
 
   return {
     attachScene(s) {
       scene = s;
+      scene.setSections(layout.anchors);
       onScroll();
-      if (hue != null) scene.setSectionHue(hue);
-      if (!scene.reduceMotion && !matchMedia('(pointer: coarse)').matches) {
-        window.addEventListener('pointermove', onPointerMove, { passive: true });
-      }
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+    },
+    detachScene() {
+      scene = null;
+      window.removeEventListener('pointermove', onPointerMove);
+    },
+    destroy() {
+      cancelAnimationFrame(measureRaf);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', scheduleMeasure);
+      window.removeEventListener('pointermove', onPointerMove);
+      resizeObserver?.disconnect();
     },
   };
 }
