@@ -35,6 +35,7 @@
     "security:check": "node scripts/security.mjs --check",
     "build:og": "node scripts/build-og.mjs",
     "bench": "node scripts/bench.mjs",
+    "screenshots": "node scripts/screenshots.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
