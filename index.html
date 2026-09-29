@@ -1,26 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>ORBIT - a 3D scrollytelling starter</title>
-  <meta name="description" content="ORBIT is a free, open-source 3D scroll-driven website template. Fork it, edit one config file, and deploy your own cinematic portfolio or product landing." />
-  <meta name="color-scheme" content="dark" />
-  <meta property="og:title" content="ORBIT - a 3D scrollytelling starter" />
-  <meta property="og:description" content="Fork it, edit the content, deploy your own cinematic 3D site. Open source, zero build, fast." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="./assets/og.svg" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./styles/main.css" />
+  <meta name="description" content="ORBIT is a free, open-source 3D scroll-driven website template. Fork it, edit one config file, and deploy your own cinematic portfolio or product landing.">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:title" content="ORBIT - a 3D scrollytelling starter">
+  <meta property="og:description" content="Fork it, edit the content, deploy your own cinematic 3D site. Open source, zero build, fast.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="./assets/og.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles/main.css">
+  <!-- Without JS the page is plain HTML/CSS: content is visible by default (see .reveal in main.css). -->
+  <noscript><style>#scene,.grain,.progress{display:none}</style></noscript>
   <script type="importmap">
     {
       "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        "three": "./vendor/three/three.module.js",
+        "three/addons/": "./vendor/three/addons/"
       }
     }
   </script>
