@@ -73,6 +73,10 @@ Scene API: `scene.setSectionHue()` and `scene.reduceMotion` are gone (`setSectio
   particles, and only when something changed.
 - Section highlighting never fired for sections taller than two viewports; blocks in the bottom 8% of the
   viewport (the hero's scroll cue) were never revealed; particle sizes could balloon near the camera.
+- A browser whose `getContext` throws while the page probes for WebGL no longer strands `data-orbit` in
+  `loading`; the backdrop is marked unavailable and the content is untouched.
+- The `?debug` overlay reads the GPU name from `RENDERER` first, so Firefox's deprecation warning for
+  `WEBGL_debug_renderer_info` is not triggered; Safari before 18 gets `-webkit-backdrop-filter`.
 - Removed unused variables and dead config.
 
 ### Security
@@ -80,6 +84,8 @@ Scene API: `scene.setSectionHue()` and `scene.reduceMotion` are gone (`setSectio
 - Enforced Content-Security-Policy, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`,
   `X-Frame-Options`, `Cross-Origin-Opener-Policy` and HSTS; no third-party requests remain.
 - Vendored dependency integrity checks, exact version pinning, lockfile, `npm audit` and Dependabot in CI.
+- The CI workflow holds a read-only token and no secrets, installs with `npm ci --ignore-scripts`, does not
+  persist the checkout token and uses only official actions; a unit test fails if that changes.
 
 ### Not yet verified
 

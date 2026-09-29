@@ -31,6 +31,18 @@ const toColor = (oklch) => {
 };
 
 /**
+ * The GPU name for the ?debug overlay. Firefox answers with the real renderer through RENDERER and logs a
+ * deprecation warning when WEBGL_debug_renderer_info is used; Chromium and Safari answer "WebKit WebGL" there
+ * and keep the real name behind the extension. Asking RENDERER first only touches the extension where needed.
+ */
+const rendererName = (gl) => {
+  const masked = String(gl.getParameter(gl.RENDERER) ?? '');
+  if (!/^(webkit webgl|mozilla)?$/i.test(masked)) return masked;
+  const info = gl.getExtension('WEBGL_debug_renderer_info');
+  return info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : masked || 'unknown';
+};
+
+/**
  * The 3D backdrop. Throws if WebGL is unavailable: the page must work without it (see app.js).
  *
  *   const scene = createScene(canvas, { config, hints: { software: false }, onState, onQuality });
@@ -425,11 +437,7 @@ export function createScene(
     let gpuName = null;
     function stats() {
       const q = quality?.stats();
-      if (cfg.debug && gpuName === null && !lost) {
-        // Deprecated in Firefox (it warns), so only ever asked for in debug mode.
-        const info = gl.getExtension('WEBGL_debug_renderer_info');
-        gpuName = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : 'unknown';
-      }
+      if (cfg.debug && gpuName === null && !lost) gpuName = rendererName(gl); // debug mode only
       return {
         state,
         tier: tierName,

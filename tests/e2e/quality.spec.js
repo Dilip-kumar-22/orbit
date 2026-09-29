@@ -47,6 +47,16 @@ test.describe('quality tiers', () => {
     expect((20 * (coreDetail + 1) ** 2 * 3) / coreVertices).toBeGreaterThan(5.9);
   });
 
+  test('the ?debug diagnostics name the renderer without console warnings', async ({ page }) => {
+    // Firefox logs a deprecation warning when WEBGL_debug_renderer_info is used; RENDERER is asked first.
+    const seen = watch(page);
+    await openScene(page, 'quality=low', { frames: 2 });
+    const { gpu } = await stats(page);
+    expect(typeof gpu).toBe('string');
+    expect(gpu.length).toBeGreaterThan(0);
+    expect(seen.problems).toEqual([]);
+  });
+
   test('auto starts from a heuristic tier with the controller attached', async ({ page }) => {
     await openScene(page, 'quality=auto', { frames: 1 });
     const s = await stats(page);

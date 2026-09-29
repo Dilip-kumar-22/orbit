@@ -183,6 +183,7 @@ main:focus-visible {
 }
 .nav.is-scrolled {
   background: oklch(0.15 0.02 265 / 0.6);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2); /* Safari before 18 */
   backdrop-filter: blur(14px) saturate(1.2);
   border-bottom: 1px solid var(--border);
   padding-top: 0.7rem;
@@ -328,6 +329,7 @@ main:focus-visible {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: clamp(1.5rem, 4vw, 2.75rem);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15); /* Safari before 18 */
   backdrop-filter: blur(16px) saturate(1.15);
   box-shadow: 0 30px 80px -40px oklch(0.05 0.02 265 / 0.9);
 }
@@ -680,6 +682,7 @@ code {
   }
   .js .nav.is-open {
     background: oklch(0.15 0.02 265 / 0.96);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2); /* Safari before 18 */
     backdrop-filter: blur(14px) saturate(1.2);
     border-bottom: 1px solid var(--border);
   }
@@ -777,6 +780,7 @@ code {
   .nav.is-scrolled,
   .nav.is-open {
     background: Canvas;
+    -webkit-backdrop-filter: none;
     backdrop-filter: none;
     border-bottom: 1px solid CanvasText;
   }
@@ -785,6 +789,7 @@ code {
   .footer,
   .skip-link {
     background: Canvas;
+    -webkit-backdrop-filter: none;
     backdrop-filter: none;
     box-shadow: none;
     border: 1px solid CanvasText;
@@ -854,6 +859,7 @@ code {
   }
   .panel,
   .card {
+    -webkit-backdrop-filter: none;
     backdrop-filter: none;
     box-shadow: none;
   }

@@ -67,13 +67,13 @@ function onSceneState(state) {
 async function enableScene() {
   if (scene || pending || gone || !canvas) return;
   if (disabledByMotion()) return fallback('disabled');
-  const webgl = probeWebGL();
-  if (!webgl.ok) {
-    gone = true;
-    return fallback('unavailable');
-  }
   pending = true;
   try {
+    const webgl = probeWebGL(); // inside the try: a browser that throws here must not strand the page in 'loading'
+    if (!webgl.ok) {
+      gone = true;
+      return fallback('unavailable');
+    }
     const { createScene } = await import('./scene.js'); // three.js is fetched here, not at startup
     if (disabledByMotion()) return fallback('disabled'); // the preference changed while it loaded
     canvas.hidden = false;
