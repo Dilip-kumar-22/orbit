@@ -80,7 +80,8 @@ void main(){
   vec2 uv = gl_PointCoord - 0.5;
   float d = length(uv);
   if (d > 0.5) discard;
-  float a = smoothstep(0.5, 0.0, d);
+  // GLSL leaves smoothstep() undefined when edge0 >= edge1, so keep the edges ascending and invert.
+  float a = 1.0 - smoothstep(0.0, 0.5, d);
   float tw = 0.55 + 0.45 * sin(uTime * 1.6 + vRand * 30.0);
   gl_FragColor = vec4(uColor * (0.7 + vRand * 0.5), a * tw);
 }`;
@@ -92,7 +93,8 @@ varying vec2 vUv;
 void main(){
   vec4 c = texture2D(tDiffuse, vUv);
   vec2 d = vUv - 0.5;
-  float v = smoothstep(0.9, uVignette * 0.35, dot(d, d) * 2.0);
+  // Ascending edges (inner < 0.9) are required by the GLSL spec; the clamp keeps them valid for any uVignette.
+  float v = 1.0 - smoothstep(min(uVignette * 0.35, 0.89), 0.9, dot(d, d) * 2.0);
   gl_FragColor = vec4(c.rgb * mix(0.78, 1.0, v), c.a);
 }`;
 
