@@ -15,12 +15,8 @@ function orbit() {
     apply: 'build',
     transformIndexHtml: {
       order: 'pre',
-      // The import map and the modulepreload hints only serve the un-bundled source tree;
-      // a build resolves `three` from node_modules itself.
-      handler: (html) =>
-        html
-          .replace(/[ \t]*<script type="importmap">[\s\S]*?<\/script>\n?/, '')
-          .replace(/[ \t]*<link rel="modulepreload"[^>]*data-source-only[^>]*>\n?/g, ''),
+      // The import map only serves the un-bundled source tree; a build resolves `three` from node_modules.
+      handler: (html) => html.replace(/[ \t]*<script type="importmap">[\s\S]*?<\/script>\n?/, ''),
     },
     writeBundle(options) {
       for (const file of COPY_TO_DIST) {
@@ -33,10 +29,22 @@ function orbit() {
   };
 }
 
+// The dev server's HMR client talks over a WebSocket and injects a little inline code, which the page's
+// own CSP (a <meta> tag, see scripts/security.mjs) would block. The policy is for deployments, so the dev
+// server serves the page without it.
+function orbitDev() {
+  return {
+    name: 'orbit-dev',
+    apply: 'serve',
+    transformIndexHtml: (html) =>
+      html.replace(/[ \t]*<meta http-equiv="Content-Security-Policy"[^>]*>\n?/, ''),
+  };
+}
+
 export default defineConfig({
   base: './',
   publicDir: false,
-  plugins: [orbit()],
+  plugins: [orbit(), orbitDev()],
   build: { target: 'es2022', outDir: 'dist', emptyOutDir: true },
   preview: { headers: securityHeaders() },
   test: {

@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Qvtpj9dqbDfT3CyUqh/xkOt4IWsXO+QZHOTOi7vn2Mo='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
   <title>ORBIT - a 3D scrollytelling starter</title>
   <meta name="description" content="ORBIT is a free, open-source 3D scroll-driven website template. Fork it, edit one config file, and deploy your own cinematic portfolio or product landing.">
   <meta name="color-scheme" content="dark">
@@ -28,8 +29,7 @@
   <link rel="preload" href="./assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="./assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="./styles/main.css">
-  <!-- Without JS the page is plain HTML/CSS: content is visible by default (see .reveal in main.css). -->
-  <noscript><style>#scene,.grain,.progress{display:none}</style></noscript>
+  <!-- Resolves `three` for the un-bundled source tree. Changing it changes its hash: run `npm run security:sync`. -->
   <script type="importmap">
     {
       "imports": {
@@ -75,20 +75,20 @@
       <div class="hero__inner">
         <p class="eyebrow reveal">Open-source - 3D - zero build</p>
         <h1 class="hero__title">
-          <span class="reveal" style="--i:0">Scroll through</span>
-          <span class="reveal accent" style="--i:1">a quiet galaxy</span>
-          <span class="reveal" style="--i:2">of your work.</span>
+          <span class="reveal" data-i="0">Scroll through</span>
+          <span class="reveal accent" data-i="1">a quiet galaxy</span>
+          <span class="reveal" data-i="2">of your work.</span>
         </h1>
-        <p class="hero__sub reveal" style="--i:3">
-          ORBIT is a cinematic, scroll-driven website starter. Fork it, edit one file,
+        <p class="hero__sub reveal" data-i="3">
+          ORBIT is a cinematic, scroll-driven website starter. Fork it, edit the content and one config file,
           and ship a 3D portfolio or product landing that actually feels alive - and stays fast.
         </p>
-        <div class="hero__actions reveal" style="--i:4">
+        <div class="hero__actions reveal" data-i="4">
           <a class="btn btn--primary" href="#work">See it move</a>
           <a class="btn btn--ghost" href="https://github.com/Dilip-kumar-22/orbit" target="_blank" rel="noopener">Fork on GitHub</a>
         </div>
       </div>
-      <div class="scroll-cue reveal" style="--i:5" aria-hidden="true">
+      <div class="scroll-cue reveal" data-i="5" aria-hidden="true">
         <span>Scroll</span>
         <span class="scroll-cue__line"></span>
       </div>

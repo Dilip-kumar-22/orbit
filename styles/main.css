@@ -82,6 +82,10 @@ body {
 #scene[hidden] {
   display: none;
 }
+html:not(.js) #scene,
+html:not(.js) .progress {
+  display: none; /* nothing to draw or measure without JS */
+}
 /* No 3D backdrop (no JS, no WebGL, disabled for reduced motion, or it failed): a static aurora keeps
    the page from going flat. html[data-orbit] is set by src/app.js. */
 html:not([data-orbit]) body::before,
@@ -103,7 +107,7 @@ html[data-orbit='failed'] body::before {
   z-index: -1;
   pointer-events: none;
   opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url('../assets/grain.svg');
   mix-blend-mode: overlay;
 }
 /* a soft vignette + readability gradient so text never floats on noise */
@@ -620,6 +624,34 @@ code {
   transform: translateY(26px);
   filter: blur(6px);
   will-change: opacity, transform;
+}
+/* stagger: data-i="1".."9" on a .reveal element delays it by that many steps (no inline styles: strict CSP) */
+.reveal[data-i='1'] {
+  --i: 1;
+}
+.reveal[data-i='2'] {
+  --i: 2;
+}
+.reveal[data-i='3'] {
+  --i: 3;
+}
+.reveal[data-i='4'] {
+  --i: 4;
+}
+.reveal[data-i='5'] {
+  --i: 5;
+}
+.reveal[data-i='6'] {
+  --i: 6;
+}
+.reveal[data-i='7'] {
+  --i: 7;
+}
+.reveal[data-i='8'] {
+  --i: 8;
+}
+.reveal[data-i='9'] {
+  --i: 9;
 }
 
 /* responsive */

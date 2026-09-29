@@ -26,15 +26,15 @@ export default [
     languageOptions: { globals: globals.browser },
     rules: { ...rules, 'no-console': ['error', { allow: ['warn', 'error'] }] },
   },
-  // Tooling and unit tests run in Node.
+  // Config and unit tests run in Node.
   {
-    files: ['scripts/**/*.mjs', '*.config.js', 'tests/unit/**/*.js'],
+    files: ['*.config.js', 'tests/unit/**/*.js'],
     languageOptions: { globals: globals.node },
     rules,
   },
-  // e2e specs run in Node but hand functions to the page (page.evaluate), so they see both.
+  // Scripts and e2e specs run in Node but hand functions to a page (page.evaluate), so they see both.
   {
-    files: ['tests/e2e/**/*.js'],
+    files: ['scripts/**/*.mjs', 'tests/e2e/**/*.js'],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
     rules,
   },
