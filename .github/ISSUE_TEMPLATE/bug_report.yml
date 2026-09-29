@@ -1,0 +1,62 @@
+name: Bug report
+description: Something is broken, looks wrong or performs badly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. For a security problem, do **not** file an issue: see SECURITY.md.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you see, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: A URL and a few steps. Appending `?debug` to the address shows a diagnostics overlay; please paste it.
+      placeholder: |
+        1. Open ...
+        2. Scroll to ...
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser, version and OS
+      placeholder: Firefox 133 on Windows 11
+    validations:
+      required: true
+  - type: input
+    id: gpu
+    attributes:
+      label: Device and GPU
+      description: Visible in the `?debug` overlay (or chrome://gpu). Say if it is a phone or a laptop on battery.
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did you see it?
+      options:
+        - The live demo
+        - The source tree (npm start / a static server)
+        - The optimised build (npm run build)
+        - Embedded in my own site
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Console output
+      description: Errors or warnings from the browser console, if any.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before filing
+      options:
+        - label: I tried `?quality=low` and it makes no difference to this problem (skip for non-performance bugs)
+        - label: I searched existing issues
+          required: true
