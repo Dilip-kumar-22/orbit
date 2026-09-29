@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 // Console noise that comes from the test environment, not from ORBIT.
 const ENV_NOISE = [
@@ -28,10 +28,26 @@ export function watch(page) {
   return { problems, requests };
 }
 
+/** Skips the current test in browsers (or CI machines) without WebGL2: those still run the content tests. */
+async function requireWebGL(page) {
+  const ok = await page.evaluate(() => !!document.createElement('canvas').getContext('webgl2'));
+  test.skip(!ok, 'WebGL2 is not available in this browser');
+}
+
 /** Load a page with the diagnostics handle (?debug) and wait until the scene has rendered frames. */
 export async function openScene(page, query = 'quality=low', { frames = 3 } = {}) {
   await page.goto(`/?debug&${query}`);
+  await requireWebGL(page);
   await page.waitForFunction((n) => window.orbit?.stats().frames >= n, frames);
+}
+
+/** Same, for a scene that is expected to sit in the still-frame ('static') state. */
+export async function openStatic(page, query = 'quality=low') {
+  await page.goto(`/?debug&${query}`);
+  await requireWebGL(page);
+  await page.waitForFunction(
+    () => window.orbit?.stats().state === 'static' && window.orbit.stats().frames >= 1,
+  );
 }
 
 export const stats = (page) => page.evaluate(() => window.orbit.stats());

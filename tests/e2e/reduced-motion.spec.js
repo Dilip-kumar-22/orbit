@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test';
-import { expectContentVisible, isSceneRequest, openScene, orbitState, stats, watch } from './helpers.js';
-
-const openStatic = async (page, query = 'quality=low') => {
-  await page.goto(`/?debug&${query}`);
-  await page.waitForFunction(
-    () => window.orbit?.stats().state === 'static' && window.orbit.stats().frames >= 1,
-  );
-};
+import {
+  expectContentVisible,
+  isSceneRequest,
+  openScene,
+  openStatic,
+  orbitState,
+  stats,
+  watch,
+} from './helpers.js';
 
 test.describe('prefers-reduced-motion', () => {
   test('enabled before load: no animation, no hidden content, still frame stays sharp on resize', async ({

@@ -68,7 +68,8 @@ test('keyboard: every stop shows a visible focus indicator and nothing traps foc
   expect(stops.length).toBeLessThan(40);
 });
 
-test('forced colors: gradient text and controls stay legible', async ({ page }) => {
+test('forced colors: gradient text and controls stay legible', async ({ page, browserName }) => {
+  test.skip(browserName === 'webkit', 'WebKit cannot emulate forced colors');
   await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
   await page.goto('/?quality=low');
   const accent = await page.$eval('.accent', (el) => {

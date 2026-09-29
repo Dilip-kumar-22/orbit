@@ -32,6 +32,8 @@ test.describe('layout', () => {
 
 test.describe('touch device', () => {
   const { viewport, userAgent, deviceScaleFactor, isMobile, hasTouch } = devices['Pixel 7'];
+  // Firefox cannot emulate isMobile, and the tier assertions are written for Chromium's software WebGL.
+  test.skip(({ browserName }) => browserName !== 'chromium', 'touch-device test runs on Chromium');
   test.use({ viewport, userAgent, deviceScaleFactor, isMobile, hasTouch });
 
   test('starts below the top tier and keeps up through an orientation change', async ({ page }) => {
