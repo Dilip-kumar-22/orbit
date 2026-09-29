@@ -1,0 +1,63 @@
+{
+  "package": "three",
+  "version": "0.186.1",
+  "license": "MIT",
+  "files": {
+    "LICENSE": {
+      "sha256": "sha256-izeOvmDi/lABWMsKxxy16LfZKVPCq8xjoOuQSZZTtbw=",
+      "source": "LICENSE"
+    },
+    "addons/postprocessing/EffectComposer.js": {
+      "sha256": "sha256-TgeaWIYVLX5Smlmu9kTpaKtNMsajPOAWs2vymy6sJvc=",
+      "source": "examples/jsm/postprocessing/EffectComposer.js"
+    },
+    "addons/postprocessing/MaskPass.js": {
+      "sha256": "sha256-fNCO7p1db1V4vq3b3L6cOE9oc4EK8n8iq32zzusSeqM=",
+      "source": "examples/jsm/postprocessing/MaskPass.js"
+    },
+    "addons/postprocessing/OutputPass.js": {
+      "sha256": "sha256-AuSiYa803nEzgYXp6H8Mvly6kRVgjZhDY+EmnewdInI=",
+      "source": "examples/jsm/postprocessing/OutputPass.js"
+    },
+    "addons/postprocessing/Pass.js": {
+      "sha256": "sha256-REtAnCNerZhok8Ry5yDaG3eaVphcfRCyeceUS1K9YcU=",
+      "source": "examples/jsm/postprocessing/Pass.js"
+    },
+    "addons/postprocessing/RenderPass.js": {
+      "sha256": "sha256-gX9sPNzQ/UFRXREjWeoFMlaO77WqvTszkDlX68obimo=",
+      "source": "examples/jsm/postprocessing/RenderPass.js"
+    },
+    "addons/postprocessing/ShaderPass.js": {
+      "sha256": "sha256-4lAKWROya79RSM6q5kTG7c/wahiwFJTuN7+FY1PSq50=",
+      "source": "examples/jsm/postprocessing/ShaderPass.js"
+    },
+    "addons/postprocessing/UnrealBloomPass.js": {
+      "sha256": "sha256-uo8vyt+mWIOEyUc0mPl02B0SDwLw5joOWcJlICoAa1o=",
+      "source": "examples/jsm/postprocessing/UnrealBloomPass.js"
+    },
+    "addons/shaders/CopyShader.js": {
+      "sha256": "sha256-ozBX1ayRxDMEwYasDogW5iuy7UcdOgD/MBjf1cA4lxg=",
+      "source": "examples/jsm/shaders/CopyShader.js"
+    },
+    "addons/shaders/LuminosityHighPassShader.js": {
+      "sha256": "sha256-UET3gLbmz4Y5R/ZMNv4VhxMvf745WtqGPNHl8DiNzx4=",
+      "source": "examples/jsm/shaders/LuminosityHighPassShader.js"
+    },
+    "addons/shaders/OutputShader.js": {
+      "sha256": "sha256-NTR593qNfiYp1JzKyfwvXb/dpUQuCt+GewA3ei/LDLI=",
+      "source": "examples/jsm/shaders/OutputShader.js"
+    },
+    "three.core.js": {
+      "sha256": "sha256-7Rwlmb+MXKSdNXSYSY0uFIMpgete2p5THfSnMOiOZfc=",
+      "source": "build/three.core.js",
+      "minified": true,
+      "sourceSha256": "sha256-nt3gArBmqaBWdqYSf2dzW2K685m96lKfL34xZX2naeY="
+    },
+    "three.module.js": {
+      "sha256": "sha256-jwkxQQAvy3jj1lCXrOXyCebC1e8nsK7g1+/65OsLGQs=",
+      "source": "build/three.module.js",
+      "minified": true,
+      "sourceSha256": "sha256-kFIELWdssP3B3f7+GTBT80t6wFE6YW/axFNdSZh4Euo="
+    }
+  }
+}
