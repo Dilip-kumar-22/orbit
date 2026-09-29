@@ -1,0 +1,48 @@
+# Third-party notices
+
+ORBIT itself is released under the MIT License (see [LICENSE](LICENSE)). It includes or
+redistributes the third-party material listed below, each under its own license. The
+notices are reproduced as the upstream licenses require.
+
+## webgl-noise: 3D simplex noise (Ashima Arts)
+
+|                   |                                                                                   |
+| ----------------- | --------------------------------------------------------------------------------- |
+| Project           | webgl-noise, "Array and textureless GLSL 2D/3D/4D simplex noise functions"        |
+| Upstream          | <https://github.com/ashima/webgl-noise> (maintained fork: <https://github.com/stegu/webgl-noise>) |
+| Author            | Ian McEwan, Ashima Arts                                                           |
+| License           | MIT                                                                               |
+| Derived code      | `src/shaders.js`: the `SIMPLEX` constant (`permute`, `taylorInvSqrt`, `snoise(vec3)`) |
+| Upstream file     | `src/noise3D.glsl`, the original 2011 formulation (permute offset 1.0, falloff 0.6, scale 42.0) |
+| Modifications     | `mod289()` helpers inlined as `mod(x, 289.0)`; source compacted. Algorithm unchanged. |
+
+This code is **not** public domain. It is MIT licensed and requires the notice below to
+travel with any copy or substantial portion of it. The same notice is embedded in
+`src/shaders.js` directly above the derived code.
+
+```text
+Copyright (C) 2011 by Ashima Arts (Simplex noise)
+Copyright (C) 2011-2016 by Stefan Gustavson (Classic noise and others)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
+
+The Stefan Gustavson line covers the classic-noise and other functions in the same upstream
+repository. ORBIT uses only the simplex noise, but the upstream `LICENSE` is reproduced
+unabridged so no attribution is lost.

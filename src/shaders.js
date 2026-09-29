@@ -1,6 +1,34 @@
 // GLSL for ORBIT. Kept compact; materials are built in one constructor in scene.js / particles.js.
 
-// Ashima 3D simplex noise (standard, public-domain) - reused by the core displacement.
+/*!
+ * Third-party code: the 3D simplex noise below (permute, taylorInvSqrt, snoise) is derived from
+ * "webgl-noise" by Ian McEwan, Ashima Arts - src/noise3D.glsl, the original 2011 formulation
+ * (permute offset 1.0, falloff 0.6, scale 42.0):
+ *   https://github.com/ashima/webgl-noise   (maintained fork: https://github.com/stegu/webgl-noise)
+ * Changes: the mod289() helpers are inlined as mod(x, 289.0) and the source is compacted.
+ * It is licensed under the MIT License - it is NOT public domain. Upstream notice, reproduced in full:
+ *
+ * Copyright (C) 2011 by Ashima Arts (Simplex noise)
+ * Copyright (C) 2011-2016 by Stefan Gustavson (Classic noise and others)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 const SIMPLEX = /* glsl */ `
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
