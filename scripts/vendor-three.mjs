@@ -54,7 +54,8 @@ function localImports(source, file) {
   for (const [, spec] of source.matchAll(re)) {
     if (spec === 'three') continue; // resolved by the import map
     if (spec.startsWith('three/addons/')) found.push(spec.slice('three/addons/'.length));
-    else if (spec.startsWith('./') || spec.startsWith('../')) found.push(posix.join(posix.dirname(file), spec));
+    else if (spec.startsWith('./') || spec.startsWith('../'))
+      found.push(posix.join(posix.dirname(file), spec));
     else throw new Error(`${file}: unexpected import "${spec}" - teach scripts/vendor-three.mjs about it`);
   }
   return found;
@@ -99,7 +100,9 @@ async function minify(name) {
       },
     },
   });
-  const chunks = (Array.isArray(result) ? result : [result]).flatMap((r) => r.output).filter((o) => o.type === 'chunk');
+  const chunks = (Array.isArray(result) ? result : [result])
+    .flatMap((r) => r.output)
+    .filter((o) => o.type === 'chunk');
   if (chunks.length !== 1) throw new Error(`${name}: expected one output chunk, got ${chunks.length}`);
   return { code: Buffer.from(chunks[0].code, 'utf8'), source: Buffer.from(source, 'utf8') };
 }
@@ -146,14 +149,17 @@ async function write() {
   }
   writeFileSync(join(OUT_DIR, 'manifest.json'), `${JSON.stringify(manifestOf(generated), null, 2)}\n`);
   const total = [...generated.files.values()].reduce((n, f) => n + f.buf.length, 0);
-  console.log(`vendored three@${generated.version}: ${generated.files.size} files, ${(total / 1024).toFixed(0)} KiB -> vendor/three/`);
+  console.log(
+    `vendored three@${generated.version}: ${generated.files.size} files, ${(total / 1024).toFixed(0)} KiB -> vendor/three/`,
+  );
 }
 
 async function check() {
   const problems = [];
   const version = threeVersion();
   const manifest = readJson(join(OUT_DIR, 'manifest.json'));
-  if (manifest.version !== version) problems.push(`manifest is for three@${manifest.version}, installed is ${version}`);
+  if (manifest.version !== version)
+    problems.push(`manifest is for three@${manifest.version}, installed is ${version}`);
 
   const vendored = new Set(listFiles(OUT_DIR).filter((f) => f !== 'manifest.json'));
   for (const path of Object.keys(manifest.files)) if (!vendored.has(path)) problems.push(`missing: ${path}`);
@@ -165,24 +171,31 @@ async function check() {
     if (sha256(buf) !== entry.sha256) problems.push(`modified: ${path}`);
     const upstream = sha256(readFileSync(join(PKG_DIR, entry.source)));
     if (entry.minified) {
-      if (upstream !== entry.sourceSha256) problems.push(`upstream ${entry.source} changed - run: npm run vendor`);
+      if (upstream !== entry.sourceSha256)
+        problems.push(`upstream ${entry.source} changed - run: npm run vendor`);
     } else if (upstream !== entry.sha256) {
       problems.push(`upstream ${entry.source} changed - run: npm run vendor`);
     }
   }
 
   // The minified build must expose exactly the API upstream does.
-  const upstreamApi = Object.keys(await import(pathToFileURL(join(PKG_DIR, 'build', 'three.module.js')))).sort();
+  const upstreamApi = Object.keys(
+    await import(pathToFileURL(join(PKG_DIR, 'build', 'three.module.js'))),
+  ).sort();
   const vendoredApi = Object.keys(await import(pathToFileURL(join(OUT_DIR, 'three.module.js')))).sort();
   const lost = upstreamApi.filter((k) => !vendoredApi.includes(k));
   const extra = vendoredApi.filter((k) => !upstreamApi.includes(k));
   if (lost.length || extra.length) problems.push(`export mismatch: lost [${lost}] extra [${extra}]`);
 
   if (problems.length) {
-    console.error(`vendor/three is out of date:\n - ${problems.join('\n - ')}\nFix: npm ci && npm run vendor`);
+    console.error(
+      `vendor/three is out of date:\n - ${problems.join('\n - ')}\nFix: npm ci && npm run vendor`,
+    );
     process.exit(1);
   }
-  console.log(`vendor/three matches three@${version} (${vendored.size} files, ${upstreamApi.length} exports).`);
+  console.log(
+    `vendor/three matches three@${version} (${vendored.size} files, ${upstreamApi.length} exports).`,
+  );
 }
 
 if (process.argv.includes('--check')) await check();

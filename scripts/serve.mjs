@@ -53,7 +53,8 @@ export function startServer({ root = ROOT, port = 4173, host = '127.0.0.1', head
     const rel = file.slice(base.length + 1);
     // Never serve outside the root, dotfiles/dot-directories (.git, ...) or dependencies.
     if (file !== base && !file.startsWith(base + sep)) return send(403, 'Forbidden');
-    if (rel.split(sep).some((part) => part.startsWith('.') || part === 'node_modules')) return send(404, 'Not found');
+    if (rel.split(sep).some((part) => part.startsWith('.') || part === 'node_modules'))
+      return send(404, 'Not found');
     if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
     if (!existsSync(file) || !statSync(file).isFile()) return send(404, 'Not found');
 
@@ -77,7 +78,12 @@ export function startServer({ root = ROOT, port = 4173, host = '127.0.0.1', head
 if (import.meta.url === new URL(process.argv[1], 'file://').href) {
   const port = Number(arg('port', 4173));
   const host = arg('host', '127.0.0.1');
-  const server = await startServer({ root: arg('root', ROOT), port, host, headers: !process.argv.includes('--no-headers') });
+  const server = await startServer({
+    root: arg('root', ROOT),
+    port,
+    host,
+    headers: !process.argv.includes('--no-headers'),
+  });
   const { address, port: bound } = server.address();
   console.log(`ORBIT  http://${address === '::' ? 'localhost' : address}:${bound}/   (Ctrl+C to stop)`);
 }

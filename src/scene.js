@@ -13,9 +13,15 @@ const easeInOut = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2)
 
 export function createScene(canvas) {
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const srgb = (oklch) => { const [r, g, b] = oklchToRGB(oklch); const c = new THREE.Color(); c.setRGB(r, g, b, THREE.SRGBColorSpace); return c; };
+  const srgb = (oklch) => {
+    const [r, g, b] = oklchToRGB(oklch);
+    const c = new THREE.Color();
+    c.setRGB(r, g, b, THREE.SRGBColorSpace);
+    return c;
+  };
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const W = () => window.innerWidth, H = () => window.innerHeight;
+  const W = () => window.innerWidth,
+    H = () => window.innerHeight;
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
   renderer.setPixelRatio(dpr);
@@ -33,10 +39,14 @@ export function createScene(canvas) {
   // morphing core (custom shader: dark body + luminous fresnel rim)
   const coreMat = new THREE.ShaderMaterial({
     uniforms: {
-      uTime: { value: 0 }, uAmp: { value: CONFIG.core.displacement }, uScale: { value: CONFIG.core.noiseScale },
-      uColorA: { value: srgb(CONFIG.color.coreA) }, uColorB: { value: srgb(CONFIG.color.coreB) },
+      uTime: { value: 0 },
+      uAmp: { value: CONFIG.core.displacement },
+      uScale: { value: CONFIG.core.noiseScale },
+      uColorA: { value: srgb(CONFIG.color.coreA) },
+      uColorB: { value: srgb(CONFIG.color.coreB) },
     },
-    vertexShader: coreVertex, fragmentShader: coreFragment,
+    vertexShader: coreVertex,
+    fragmentShader: coreFragment,
   });
   const core = new THREE.Mesh(new THREE.IcosahedronGeometry(CONFIG.core.radius, CONFIG.core.detail), coreMat);
   scene.add(core);
@@ -49,15 +59,26 @@ export function createScene(canvas) {
   const composer = new EffectComposer(renderer, rt);
   composer.setPixelRatio(dpr);
   composer.addPass(new RenderPass(scene, camera));
-  composer.addPass(new UnrealBloomPass(new THREE.Vector2(W(), H()), CONFIG.bloom.strength, CONFIG.bloom.radius, CONFIG.bloom.threshold));
+  composer.addPass(
+    new UnrealBloomPass(
+      new THREE.Vector2(W(), H()),
+      CONFIG.bloom.strength,
+      CONFIG.bloom.radius,
+      CONFIG.bloom.threshold,
+    ),
+  );
   composer.addPass(new OutputPass());
-  composer.addPass(new ShaderPass({
-    uniforms: { tDiffuse: { value: null }, uVignette: { value: CONFIG.vignette } },
-    vertexShader: gradeVertex, fragmentShader: gradeFragment,
-  }));
+  composer.addPass(
+    new ShaderPass({
+      uniforms: { tDiffuse: { value: null }, uVignette: { value: CONFIG.vignette } },
+      vertexShader: gradeVertex,
+      fragmentShader: gradeFragment,
+    }),
+  );
 
   // scroll/pointer state
-  let progress = 0, curZ = CONFIG.camera.zStart;
+  let progress = 0,
+    curZ = CONFIG.camera.zStart;
   let hue = CONFIG.grade.hero;
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
   const clock = new THREE.Clock();
@@ -79,25 +100,49 @@ export function createScene(canvas) {
   }
 
   function resize() {
-    camera.aspect = W() / H(); camera.updateProjectionMatrix();
-    renderer.setSize(W(), H()); composer.setSize(W(), H());
+    camera.aspect = W() / H();
+    camera.updateProjectionMatrix();
+    renderer.setSize(W(), H());
+    composer.setSize(W(), H());
     particles.material.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 2);
   }
   window.addEventListener('resize', resize);
 
   let raf = 0;
-  function loop() { raf = requestAnimationFrame(loop); render(clock.getElapsedTime()); }
-  function start() {
-    if (reduceMotion) { render(0); return; }  // single static frame, no animation
-    cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
+  function loop() {
+    raf = requestAnimationFrame(loop);
+    render(clock.getElapsedTime());
   }
-  function stop() { cancelAnimationFrame(raf); raf = 0; }
-  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else if (!reduceMotion) start(); });
+  function start() {
+    if (reduceMotion) {
+      render(0);
+      return;
+    } // single static frame, no animation
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(loop);
+  }
+  function stop() {
+    cancelAnimationFrame(raf);
+    raf = 0;
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop();
+    else if (!reduceMotion) start();
+  });
 
   return {
-    start, stop, reduceMotion,
-    setProgress: (p) => { progress = Math.min(1, Math.max(0, p)); },
-    setSectionHue: (h) => { hue = h; },
-    onPointer: (nx, ny) => { pointer.tx = nx; pointer.ty = ny; },
+    start,
+    stop,
+    reduceMotion,
+    setProgress: (p) => {
+      progress = Math.min(1, Math.max(0, p));
+    },
+    setSectionHue: (h) => {
+      hue = h;
+    },
+    onPointer: (nx, ny) => {
+      pointer.tx = nx;
+      pointer.ty = ny;
+    },
   };
 }

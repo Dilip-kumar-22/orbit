@@ -11,7 +11,12 @@ const wanted = (process.env.ORBIT_BROWSERS ?? 'chromium').split(',').map((s) => 
 
 // Headless Chromium has no GPU: use SwiftShader so WebGL exists (slow, but real WebGL2).
 const chromiumLaunch = {
-  args: ['--enable-unsafe-swiftshader', '--use-angle=swiftshader', '--use-gl=angle', '--ignore-gpu-blocklist'],
+  args: [
+    '--enable-unsafe-swiftshader',
+    '--use-angle=swiftshader',
+    '--use-gl=angle',
+    '--ignore-gpu-blocklist',
+  ],
   ...(process.env.ORBIT_CHROMIUM && { executablePath: process.env.ORBIT_CHROMIUM }),
 };
 

@@ -2,11 +2,11 @@
 
 **A free, open-source 3D scrollytelling website starter.** Fork it, edit the content + one config file, and deploy a cinematic, scroll-driven portfolio or product landing that actually feels alive - and stays fast and accessible.
 
-> *"Scroll through a quiet galaxy of your work."*
+> _"Scroll through a quiet galaxy of your work."_
 
 **[Live demo](https://dilip-kumar-22.github.io/orbit/)** - **[Source](https://github.com/Dilip-kumar-22/orbit)** - MIT licensed, zero build.
 
-- **Real 3D, behind real text** - a custom curl-noise core + an 8k-point particle galaxy + bloom and a film grade, layered *under* selectable, crawlable HTML.
+- **Real 3D, behind real text** - a custom curl-noise core + an 8k-point particle galaxy + bloom and a film grade, layered _under_ selectable, crawlable HTML.
 - **Smooth, never scrolljacked** - native scroll drives an eased camera, so it feels buttery while staying fully keyboard- and screen-reader-accessible.
 - **One dependency** - just [three.js](https://threejs.org) from a CDN. No build step, no framework, no bundler.
 - **Fast + considerate** - capped DPR, the render loop pauses when the tab/canvas is hidden, and a complete `prefers-reduced-motion` path.
@@ -51,7 +51,7 @@ orbit/
 
 ## Deploy
 
-**Vercel** - import the repo (Framework preset: *Other*, no build command, output dir `.`) or run `vercel`.
+**Vercel** - import the repo (Framework preset: _Other_, no build command, output dir `.`) or run `vercel`.
 
 **GitHub Pages** - Settings -> Pages -> deploy from `main` / root. It is plain static files, so it just works.
 

@@ -9,7 +9,16 @@ const rules = {
 };
 
 export default [
-  { ignores: ['vendor/**', 'dist/**', 'node_modules/**', 'coverage/**', 'playwright-report/**', 'test-results/**'] },
+  {
+    ignores: [
+      'vendor/**',
+      'dist/**',
+      'node_modules/**',
+      'coverage/**',
+      'playwright-report/**',
+      'test-results/**',
+    ],
+  },
   js.configs.recommended,
   // Browser code: the only place the site's own scripts run.
   {
