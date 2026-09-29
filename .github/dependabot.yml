@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: build
+    labels: [dependencies]
+    groups:
+      # Tooling moves together; three.js (a runtime dependency) always gets its own PR, because bumping it
+      # also means re-running `npm run vendor` (CI's vendor:check fails until someone does).
+      dev-tooling:
+        dependency-type: development
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+    labels: [dependencies]

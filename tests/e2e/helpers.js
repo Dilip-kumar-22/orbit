@@ -1,0 +1,84 @@
+import { expect, test } from '@playwright/test';
+
+// Console noise that comes from the test environment, not from ORBIT.
+const ENV_NOISE = [
+  /GPU stall due to ReadPixels/i,
+  /Automatic fallback to software WebGL has been deprecated/i,
+  /\[GroupMarkerNotSet\]/i,
+];
+
+// What "the 3D code" is on each target: vendor/three + src/scene.js in the source tree, one lazy chunk in dist.
+export const SCENE_ROUTE =
+  process.env.ORBIT_TARGET === 'dist' ? '**/assets/scene-*.js' : '**/vendor/three/**';
+export const isSceneRequest = (url) =>
+  /\/vendor\/three\/|\/src\/scene\.js|\/assets\/scene-[^/]+\.js/.test(url);
+
+/** Records everything that would show up as a problem in a visitor's console. */
+export function watch(page) {
+  const problems = [];
+  const requests = [];
+  page.on('console', (msg) => {
+    if (!['error', 'warning'].includes(msg.type())) return;
+    if (ENV_NOISE.some((re) => re.test(msg.text()))) return;
+    problems.push(`console.${msg.type()}: ${msg.text()}`);
+  });
+  page.on('pageerror', (err) => problems.push(`pageerror: ${err.message}`));
+  page.on('requestfailed', (req) => problems.push(`requestfailed: ${req.url()} ${req.failure()?.errorText}`));
+  page.on('request', (req) => requests.push(req.url()));
+  return { problems, requests };
+}
+
+/** Skips the current test in browsers (or CI machines) without WebGL2: those still run the content tests. */
+async function requireWebGL(page) {
+  const ok = await page.evaluate(() => !!document.createElement('canvas').getContext('webgl2'));
+  test.skip(!ok, 'WebGL2 is not available in this browser');
+}
+
+/** Load a page with the diagnostics handle (?debug) and wait until the scene has rendered frames. */
+export async function openScene(page, query = 'quality=low', { frames = 3 } = {}) {
+  await page.goto(`/?debug&${query}`);
+  await requireWebGL(page);
+  await page.waitForFunction((n) => window.orbit?.stats().frames >= n, frames);
+}
+
+/** Same, for a scene that is expected to sit in the still-frame ('static') state. */
+export async function openStatic(page, query = 'quality=low') {
+  await page.goto(`/?debug&${query}`);
+  await requireWebGL(page);
+  await page.waitForFunction(
+    () => window.orbit?.stats().state === 'static' && window.orbit.stats().frames >= 1,
+  );
+}
+
+/**
+ * Lets the page run `frames` display frames. For "nothing changed" assertions this is a window measured in
+ * the browser's own frames instead of wall-clock time, so it means the same on a slow CI runner.
+ */
+export const settle = (page, frames = 30) =>
+  page.evaluate(
+    (n) =>
+      new Promise((resolve) => {
+        const tick = () => (--n > 0 ? requestAnimationFrame(tick) : resolve());
+        requestAnimationFrame(tick);
+      }),
+    frames,
+  );
+
+export const stats = (page) => page.evaluate(() => window.orbit.stats());
+export const orbitState = (page) => page.evaluate(() => document.documentElement.dataset.orbit);
+
+/**
+ * The content is readable: the hero is visible at once, and every revealed block becomes fully
+ * opaque when it is scrolled to (below-the-fold blocks start transparent whenever JS runs, by design).
+ */
+export async function expectContentVisible(page) {
+  await expect(page.locator('h1')).toBeVisible();
+  const reveals = page.locator('.reveal');
+  for (let i = 0, n = await reveals.count(); i < n; i += 1) {
+    const el = reveals.nth(i);
+    if (!(await el.isVisible())) continue; // e.g. the scroll cue is display:none on small screens
+    await el.scrollIntoViewIfNeeded();
+    await expect(el).toHaveCSS('opacity', '1');
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+}

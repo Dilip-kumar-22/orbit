@@ -1,0 +1,35 @@
+name: Feature request
+description: Suggest an improvement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ORBIT stays small on purpose: semantic HTML first, three.js second, no framework, no telemetry, no runtime
+        network requests, no build step for consumers. Requests that fit that are very welcome.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to see?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+  - type: checkboxes
+    id: fit
+    attributes:
+      label: Fit
+      options:
+        - label: It works without adding a runtime dependency or a runtime network request
+          required: true
+        - label: The content would still work without JavaScript and WebGL
+          required: true
+        - label: I would be willing to send a pull request

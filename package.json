@@ -1,0 +1,65 @@
+{
+  "name": "orbit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A free, open-source 3D scrollytelling website starter: semantic HTML first, cinematic three.js second.",
+  "keywords": [
+    "threejs",
+    "webgl",
+    "3d",
+    "scrollytelling",
+    "portfolio",
+    "landing-page",
+    "starter-template"
+  ],
+  "homepage": "https://dilip-kumar-22.github.io/orbit/",
+  "bugs": "https://github.com/Dilip-kumar-22/orbit/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dilip-kumar-22/orbit.git"
+  },
+  "license": "MIT",
+  "author": "Dilip Kumar",
+  "type": "module",
+  "engines": {
+    "node": "^22.22.0 || >=24.8.0"
+  },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "vendor": "node scripts/vendor-three.mjs",
+    "vendor:check": "node scripts/vendor-three.mjs --check",
+    "security:sync": "node scripts/security.mjs",
+    "security:check": "node scripts/security.mjs --check",
+    "build:og": "node scripts/build-og.mjs",
+    "bench": "node scripts/bench.mjs",
+    "weight": "node scripts/weight.mjs",
+    "screenshots": "node scripts/screenshots.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "validate:html": "html-validate index.html",
+    "check:repo": "node scripts/check-repo.mjs",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "audit:deps": "npm audit --audit-level=high",
+    "verify": "npm run lint && npm run format:check && npm run validate:html && npm run check:repo && npm run vendor:check && npm run security:check && npm test",
+    "check:history": "node scripts/check-repo.mjs --history"
+  },
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "html-validate": "^11.16.1",
+    "prettier": "^3.9.9",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  }
+}
