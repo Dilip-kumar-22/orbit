@@ -151,9 +151,12 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; background: oklch
 /* footer */
 .footer { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between; padding: 2.5rem var(--pad) 3rem; color: var(--faint); font-size: 0.85rem; border-top: 1px solid var(--border); background: oklch(0.15 0.02 265 / 0.6); }
 
-/* reveal animation */
-.reveal { opacity: 0; transform: translateY(26px); filter: blur(6px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease); transition-delay: calc(var(--i, 0) * 90ms); will-change: opacity, transform; }
-.reveal.is-visible { opacity: 1; transform: none; filter: none; }
+/* reveal animation
+   Progressive enhancement: content is visible by default. Only once src/app.js has booted and can
+   also reveal it does it add html.reveal-enabled, which is what hides not-yet-revealed elements.
+   No JS / failed module / failed CDN / failed WebGL therefore never leaves content invisible. */
+.reveal { transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease); transition-delay: calc(var(--i, 0) * 90ms); }
+.reveal-enabled .reveal:not(.is-visible) { opacity: 0; transform: translateY(26px); filter: blur(6px); will-change: opacity, transform; }
 
 /* responsive */
 @media (max-width: 760px) {
@@ -169,5 +172,5 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; background: oklch
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
-  .reveal { opacity: 1; transform: none; filter: none; }
+  .reveal-enabled .reveal:not(.is-visible) { opacity: 1; transform: none; filter: none; }
 }
