@@ -6,6 +6,7 @@
 //
 // <html data-orbit="..."> mirrors what the backdrop is doing (loading | running | paused | static |
 // lost | failed | unavailable | disabled), for CSS and for debugging.
+import { initNav } from './nav.js';
 import { initReveal } from './reveal.js';
 import { initScroll } from './scroll.js';
 import { resolveConfig } from './settings.js';
@@ -17,6 +18,7 @@ const config = resolveConfig({ overrides: window.ORBIT_CONFIG, search: location.
 root.classList.add('js');
 root.dataset.orbit = 'loading';
 initReveal();
+initNav();
 const scroll = initScroll();
 
 const motion = matchMedia('(prefers-reduced-motion: reduce)');

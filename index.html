@@ -40,16 +40,23 @@
     <a class="nav__brand" href="#top" aria-label="ORBIT home">
       <span class="nav__dot" aria-hidden="true"></span> ORBIT
     </a>
-    <nav class="nav__links" aria-label="Sections">
-      <a href="#about">About</a>
-      <a href="#work">Work</a>
-      <a href="#capabilities">Capabilities</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <a class="nav__cta" href="https://github.com/Dilip-kumar-22/orbit" target="_blank" rel="noopener">Get the code</a>
+    <!-- Small screens (with JS): the links collapse behind this button. Without JS they simply stay visible. -->
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-panel">
+      <span class="nav__toggle-icon" aria-hidden="true"></span>
+      Menu
+    </button>
+    <div class="nav__panel" id="nav-panel">
+      <nav class="nav__links" aria-label="Sections">
+        <a href="#about">About</a>
+        <a href="#work">Work</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="nav__cta" href="https://github.com/Dilip-kumar-22/orbit" target="_blank" rel="noopener">Get the code</a>
+    </div>
   </header>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <!-- HERO -->
     <section class="hero" id="top" data-scene="hero">
       <div class="hero__inner">
@@ -134,10 +141,10 @@
         <p class="section__index" aria-hidden="true">03 / Capabilities</p>
         <h2 class="section__title">Built for craft and speed.</h2>
         <ul class="caps" role="list">
-          <li class="reveal"><strong>Real 3D, behind real text.</strong> A custom curl-noise core, a particle galaxy, bloom and a film grade - layered under selectable HTML.</li>
-          <li class="reveal"><strong>Smooth without hijacking.</strong> Native scroll drives an eased camera, so it feels buttery and stays fully accessible.</li>
-          <li class="reveal"><strong>Accessible by default.</strong> Semantic landmarks, keyboard focus, AA contrast, and a complete prefers-reduced-motion path.</li>
-          <li class="reveal"><strong>Fast.</strong> One dependency (three.js), capped DPR, and the render loop pauses when the tab or canvas is hidden.</li>
+          <li class="reveal"><strong>Real 3D, behind real text.</strong> A morphing noise-displaced core, a particle galaxy, bloom and a film grade - layered under selectable HTML.</li>
+          <li class="reveal"><strong>Smooth without hijacking.</strong> Native scroll drives an eased camera, so it feels buttery and stays friendly to keyboards and screen readers.</li>
+          <li class="reveal"><strong>Built to be accessible.</strong> Semantic landmarks, a skip link, visible keyboard focus, a mobile menu, and full respect for prefers-reduced-motion.</li>
+          <li class="reveal"><strong>Fast and adaptive.</strong> One dependency (three.js, self-hosted), quality tiers that adapt to the device, and the render loop pauses when the tab is hidden.</li>
         </ul>
       </div>
     </section>
@@ -158,7 +165,7 @@
   </main>
 
   <footer class="footer">
-    <span>ORBIT - MIT licensed.</span>
+    <span>ORBIT - MIT licensed. <a href="https://github.com/Dilip-kumar-22/orbit/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">Third-party notices</a></span>
     <span>Built with three.js. No tracking, no cookies.</span>
   </footer>
 

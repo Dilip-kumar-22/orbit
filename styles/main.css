@@ -1,4 +1,5 @@
-/* ORBIT - design system + layout. Color authored in OKLCH (perceptual, AA-checked). */
+/* ORBIT - design system + layout. Color authored in OKLCH (perceptual). The text/background token pairs
+   are contrast-checked in tests/unit/contrast.test.js. */
 
 /* Self-hosted variable fonts (SIL OFL 1.1, see assets/fonts and THIRD_PARTY_NOTICES.md): no request to
    a third party, works offline, and a strict CSP needs no font or style host. Latin subset only; add
@@ -33,7 +34,7 @@
   --border: oklch(0.4 0.03 265 / 0.45);
   --text: oklch(0.96 0.012 265);
   --muted: oklch(0.74 0.022 265);
-  --faint: oklch(0.6 0.02 265);
+  --faint: oklch(0.62 0.02 265);
   --accent-a: oklch(0.8 0.14 200); /* aurora cyan */
   --accent-b: oklch(0.74 0.17 300); /* aurora violet */
   --accent-grad: linear-gradient(100deg, var(--accent-a), var(--accent-b));
@@ -137,6 +138,9 @@ body::after {
   outline-offset: 3px;
   border-radius: 6px;
 }
+main:focus-visible {
+  outline: none; /* the skip link parks focus here; a ring around the whole landmark is noise */
+}
 
 /* progress bar */
 .progress {
@@ -200,6 +204,63 @@ body::after {
   background: var(--accent-grad);
   box-shadow: 0 0 12px var(--accent-a);
 }
+.nav__panel {
+  display: contents; /* desktop: brand, links and CTA are one flex row */
+}
+.nav__toggle {
+  display: none; /* only shown below 760px, and only when JS can operate it */
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.5rem;
+  padding: 0.4rem 1rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease);
+}
+.nav__toggle:hover {
+  border-color: var(--accent-a);
+}
+.nav__toggle-icon,
+.nav__toggle-icon::before,
+.nav__toggle-icon::after {
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentcolor;
+  transition:
+    transform 0.25s var(--ease),
+    background 0.2s var(--ease);
+}
+.nav__toggle-icon {
+  position: relative;
+}
+.nav__toggle-icon::before,
+.nav__toggle-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+.nav__toggle-icon::before {
+  top: -5px;
+}
+.nav__toggle-icon::after {
+  top: 5px;
+}
+.nav__toggle[aria-expanded='true'] .nav__toggle-icon {
+  background: transparent;
+}
+.nav__toggle[aria-expanded='true'] .nav__toggle-icon::before {
+  transform: translateY(5px) rotate(45deg);
+}
+.nav__toggle[aria-expanded='true'] .nav__toggle-icon::after {
+  transform: translateY(-5px) rotate(-45deg);
+}
 .nav__links {
   display: flex;
   gap: 1.6rem;
@@ -212,10 +273,10 @@ body::after {
   position: relative;
 }
 .nav__links a:hover,
-.nav__links a.is-active {
+.nav__links a[aria-current='location'] {
   color: var(--text);
 }
-.nav__links a.is-active::after {
+.nav__links a[aria-current='location']::after {
   content: '';
   position: absolute;
   left: 0;
@@ -534,6 +595,15 @@ code {
   background: oklch(0.15 0.02 265 / 0.6);
 }
 
+.footer a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.footer a:hover {
+  color: var(--text);
+}
+
 /* reveal animation
    Progressive enhancement: content is visible by default. Only once src/app.js has booted and can
    also reveal it does it add html.reveal-enabled, which is what hides not-yet-revealed elements.
@@ -554,8 +624,60 @@ code {
 
 /* responsive */
 @media (max-width: 760px) {
+  /* Without JS the links wrap onto a second row and simply stay visible. */
+  .nav {
+    flex-wrap: wrap;
+    row-gap: 0.6rem;
+  }
+  .nav__panel {
+    display: flex;
+    flex: 1 0 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem 1.25rem;
+  }
   .nav__links {
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+  }
+  /* With JS the links collapse behind the Menu button (src/nav.js) and open as a sheet under the bar. */
+  .js .nav__toggle {
+    display: inline-flex;
+  }
+  .js .nav__panel {
     display: none;
+  }
+  .js .nav.is-open {
+    background: oklch(0.15 0.02 265 / 0.96);
+    backdrop-filter: blur(14px) saturate(1.2);
+    border-bottom: 1px solid var(--border);
+  }
+  .js .nav.is-open .nav__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  .js .nav__links {
+    flex-direction: column;
+    gap: 0;
+  }
+  .js .nav__links a {
+    padding: 0.85rem 0;
+    min-height: 2.75rem;
+    font-size: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .js .nav__links a[aria-current='location']::after {
+    inset: auto auto 0.55rem 0;
+    width: 2.25rem;
+  }
+  .js .nav__cta {
+    text-align: center;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
   }
   .cards {
     grid-template-columns: 1fr;
@@ -593,6 +715,117 @@ code {
     opacity: 1;
     transform: none;
     filter: none;
+  }
+}
+
+/* high contrast preference (not forced colors): stronger borders and lighter secondary text */
+@media (prefers-contrast: more) {
+  :root {
+    --muted: oklch(0.87 0.02 265);
+    --faint: oklch(0.78 0.02 265);
+    --border: oklch(0.72 0.03 265 / 0.85);
+    --surface: oklch(0.2 0.025 265 / 0.88);
+  }
+}
+
+/* Windows high contrast / forced colors: the UA replaces colours, so anything that relied on a gradient,
+   a translucent fill or a transparent text colour needs an explicit system-colour fallback. */
+@media (forced-colors: active) {
+  #scene,
+  .grain,
+  .progress,
+  .hero::before,
+  body::before,
+  body::after {
+    display: none;
+  }
+  .accent {
+    background: none;
+    color: CanvasText;
+    -webkit-text-fill-color: CanvasText;
+  }
+  .nav.is-scrolled,
+  .nav.is-open {
+    background: Canvas;
+    backdrop-filter: none;
+    border-bottom: 1px solid CanvasText;
+  }
+  .panel,
+  .card,
+  .footer,
+  .skip-link {
+    background: Canvas;
+    backdrop-filter: none;
+    box-shadow: none;
+    border: 1px solid CanvasText;
+  }
+  .btn,
+  .nav__cta,
+  .nav__toggle {
+    border: 1px solid ButtonText;
+    box-shadow: none;
+  }
+  .btn--primary {
+    background: ButtonFace;
+    color: ButtonText;
+  }
+  .nav__dot,
+  .caps li::before {
+    background: CanvasText;
+    box-shadow: none;
+  }
+  .nav__links a[aria-current='location']::after {
+    background: LinkText;
+  }
+  :focus-visible {
+    outline: 2px solid Highlight;
+  }
+}
+
+/* printing: no backdrop, nothing hidden by a reveal that has not run, ink-friendly colours */
+@media print {
+  :root {
+    --bg: #fff;
+    --text: #111;
+    --muted: #333;
+    --faint: #555;
+    --surface: transparent;
+    --border: #999;
+  }
+  #scene,
+  .grain,
+  .progress,
+  .skip-link,
+  .nav__toggle,
+  .scroll-cue,
+  .orbit-debug,
+  .hero::before,
+  body::before,
+  body::after {
+    display: none !important;
+  }
+  .reveal-enabled .reveal:not(.is-visible) {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .accent {
+    background: none;
+    color: var(--text);
+    -webkit-text-fill-color: currentcolor;
+  }
+  .nav {
+    position: static;
+  }
+  .section,
+  .hero {
+    min-height: 0;
+    padding: 1.5rem 0;
+  }
+  .panel,
+  .card {
+    backdrop-filter: none;
+    box-shadow: none;
   }
 }
 

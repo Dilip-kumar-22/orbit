@@ -53,7 +53,6 @@ export function initScroll() {
     root.dataset.section = section?.dataset.scene ?? '';
     for (const a of links) {
       const current = section !== undefined && a.getAttribute('href') === `#${section.id}`;
-      a.classList.toggle('is-active', current);
       if (current) a.setAttribute('aria-current', 'location');
       else a.removeAttribute('aria-current');
     }
