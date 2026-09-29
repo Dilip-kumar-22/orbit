@@ -66,7 +66,7 @@ Scene API: `scene.setSectionHue()` and `scene.reduceMotion` are gone (`setSectio
 - **Reversed `smoothstep()` edges** in the particle and vignette shaders (undefined in GLSL).
 - **Wrong licence note** on the embedded simplex noise ("public-domain"): it is Ashima Arts' MIT-licensed code,
   now attributed with its full notice.
-- **Placeholder contact address** (`hello@example.com`) removed from the demo.
+- **Placeholder contact address** removed from the demo; the contact section now links to the repository's issue tracker.
 - **Reduced motion**: the still frame is re-rendered on resize/orientation change and the preference is
   watched while the page is open.
 - **Resize/DPR**: the pixel ratio was captured once; now recomputed and applied to renderer, composer and
