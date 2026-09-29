@@ -4,4 +4,5 @@
 vendor/** linguist-vendored linguist-generated
 
 *.png binary
+*.jpg binary
 *.woff2 binary
