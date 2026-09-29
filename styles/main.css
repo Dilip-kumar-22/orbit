@@ -86,12 +86,10 @@ html:not(.js) #scene,
 html:not(.js) .progress {
   display: none; /* nothing to draw or measure without JS */
 }
-/* No 3D backdrop (no JS, no WebGL, disabled for reduced motion, or it failed): a static aurora keeps
-   the page from going flat. html[data-orbit] is set by src/app.js. */
-html:not([data-orbit]) body::before,
-html[data-orbit='unavailable'] body::before,
-html[data-orbit='disabled'] body::before,
-html[data-orbit='failed'] body::before {
+/* A static aurora sits under the canvas. The opaque canvas covers it while the 3D runs; when there is none
+   (no JS, no WebGL, disabled for reduced motion, or it failed) this is what the visitor sees, and there is
+   no flash between a fallback state and the scene. */
+body::before {
   content: '';
   position: fixed;
   inset: 0;
