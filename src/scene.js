@@ -85,11 +85,11 @@ export function createScene(canvas) {
   }
   window.addEventListener('resize', resize);
 
-  let raf = 0, last = performance.now();
-  function loop(now) { raf = requestAnimationFrame(loop); render(clock.getElapsedTime()); }
+  let raf = 0;
+  function loop() { raf = requestAnimationFrame(loop); render(clock.getElapsedTime()); }
   function start() {
     if (reduceMotion) { render(0); return; }  // single static frame, no animation
-    cancelAnimationFrame(raf); last = performance.now(); raf = requestAnimationFrame(loop);
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
   }
   function stop() { cancelAnimationFrame(raf); raf = 0; }
   document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else if (!reduceMotion) start(); });

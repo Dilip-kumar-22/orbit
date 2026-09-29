@@ -1,0 +1,14 @@
+# generated / vendored / lock files
+vendor/
+dist/
+node_modules/
+package-lock.json
+coverage/
+playwright-report/
+test-results/
+
+# html is checked by html-validate (prettier reflows inline whitespace, and the import map is
+# hashed byte-for-byte for the CSP); svg/png are assets
+*.html
+*.svg
+*.png
