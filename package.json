@@ -35,10 +35,12 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "validate:html": "html-validate index.html",
+    "check:repo": "node scripts/check-repo.mjs",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "audit:deps": "npm audit --audit-level=high",
-    "verify": "npm run lint && npm run format:check && npm run validate:html && npm run vendor:check && npm test"
+    "verify": "npm run lint && npm run format:check && npm run validate:html && npm run check:repo && npm run vendor:check && npm test",
+    "check:history": "node scripts/check-repo.mjs --history"
   },
   "dependencies": {
     "three": "0.186.1"

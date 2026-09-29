@@ -81,3 +81,20 @@ THE SOFTWARE.
 The Stefan Gustavson line covers the classic-noise and other functions in the same upstream
 repository. ORBIT uses only the simplex noise, but the upstream `LICENSE` is reproduced
 unabridged so no attribution is lost.
+
+## Space Grotesk and Inter (fonts)
+
+|               |                                                                                                                                                    |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fonts         | Space Grotesk (variable, wght 300-700) and Inter (variable, wght 100-900)                                                                          |
+| Upstream      | <https://github.com/floriankarsten/space-grotesk> and <https://github.com/rsms/inter>                                                              |
+| Distribution  | the Latin subset files from the npm packages `@fontsource-variable/space-grotesk` 5.3.0 and `@fontsource-variable/inter` 5.3.0                     |
+| License       | SIL Open Font License 1.1                                                                                                                          |
+| Location      | `assets/fonts/*.woff2`; the license texts (with each project's copyright) are `assets/fonts/OFL-SpaceGrotesk.txt` and `assets/fonts/OFL-Inter.txt` |
+| Modifications | none: the woff2 files are used as published by Fontsource                                                                                          |
+
+- Space Grotesk: Copyright 2020 The Space Grotesk Project Authors (<https://github.com/floriankarsten/space-grotesk>)
+- Inter: Copyright 2016 The Inter Project Authors (<https://github.com/rsms/inter>)
+
+The SIL OFL 1.1 permits using, embedding and redistributing the fonts with software (they may not be sold on
+their own). The full text is in the two `OFL-*.txt` files.
