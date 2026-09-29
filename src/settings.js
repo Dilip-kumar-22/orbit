@@ -45,7 +45,7 @@ const PROFILE = {
 };
 
 // Everything except `sections` (a free-form map of section name -> state, checked separately).
-export const SCHEMA = {
+const SCHEMA = {
   color: { background: oklch, coreA: oklch, coreB: oklch, particle: oklch },
   core: {
     radius: num(0.1, 10),
@@ -67,7 +67,7 @@ export const SCHEMA = {
   debug: bool,
 };
 
-export const SECTION_SCHEMA = {
+const SECTION_SCHEMA = {
   hue: num(-720, 720),
   cameraZ: num(0.5, 50),
   coreScale: num(0.1, 4),
